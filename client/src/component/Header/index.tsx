@@ -11,11 +11,11 @@ export default function Header() {
   return (
     <div>
       <div className="bg-black py-10">
-        <div className="max-w-[85vw] mx-auto grid grid-cols-12 gap-x-5 items-center">
+        <div className="max-w-[80vw] mx-auto grid grid-cols-12 gap-x-5 items-center">
           <button className="col-span-2" onClick={() => navigate("/")}>
             <img src={IMAGE_PATH.DWATCH} className="w-full" />
           </button>
-          <div className="col-span-5 text-white">
+          <div className="col-span-5">
             <SearchBar />
           </div>
           <button className="col-span-3 text-white flex gap-x-3 justify-center text-xl">
