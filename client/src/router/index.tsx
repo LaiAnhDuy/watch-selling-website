@@ -3,6 +3,11 @@ import ROUTE from "../constants/route";
 import HomePage from "../page/Home";
 import PublicRoute from "../component/PublicRoute";
 import Knowledge from "../page/Knowledge";
+import AuthLayout from "../component/AuthLayout";
+import Login from "../page/Login";
+import Register from "../page/Register";
+import Fix from "../page/Fix";
+import Order from "../page/Order";
 
 
 export type RouteType = {
@@ -15,6 +20,10 @@ export type RouteType = {
   const routes: RouteType[] = [
     { path: ROUTE.HOME, title: "HomePage", element: HomePage },
     { path: ROUTE.KNOWLEDGE, title: "Kiến Thức", element: Knowledge },
+    { path: ROUTE.LOGIN, title: "Đăng nhập", element: Login },
+    { path: ROUTE.REGISTER, title: "Đăng ký", element: Register },
+    { path: ROUTE.FIX, title: "Sửa chữa", element: Fix },
+    { path: ROUTE.ORDER, title: "Giỏ hàng", element: Order },
   ];
 
   export default function AppRouter() {
@@ -22,7 +31,10 @@ export type RouteType = {
       <Routes>
         {routes.map((route) => {
           const { element: Component } = route;
-          const RouteWrapper =  PublicRoute;
+          const RouteWrapper =
+          route.path === ROUTE.LOGIN || route.path === ROUTE.REGISTER
+            ? AuthLayout
+            : PublicRoute;
           return (
             <Route
               key={route.path}

@@ -3,8 +3,7 @@ import Carousel from "../../component/Carousel";
 import Product from "../../component/Product";
 import { products, slider } from "./config";
 import EastIcon from "@mui/icons-material/East";
-
-
+import News from "../../component/News";
 
 const HomePage = () => {
   return (
@@ -34,12 +33,13 @@ const HomePage = () => {
           ))}
         </div>
         <div className="flex justify-center my-10">
-          <Link to='/men' className=" underline text-xl hover:text-red-500">
-            <EastIcon className="text-red-500 mr-5" style={{fontSize: 30}}/> XEM TẤT CẢ ĐỒNG HỒ NAM
+          <Link to="/men" className=" underline text-xl hover:text-red-500">
+            <EastIcon className="text-red-500 mr-5" style={{ fontSize: 30 }} />{" "}
+            XEM TẤT CẢ ĐỒNG HỒ NAM
           </Link>
         </div>
 
-        
+        <News />
       </div>
     </div>
   );
