@@ -4,6 +4,7 @@ import Product from "../../component/Product";
 import { products, slider } from "./config";
 import EastIcon from "@mui/icons-material/East";
 import News from "../../component/News";
+import Expertise from "../../component/Expertise";
 
 const HomePage = () => {
   return (
@@ -38,9 +39,9 @@ const HomePage = () => {
             XEM TẤT CẢ ĐỒNG HỒ NAM
           </Link>
         </div>
-
-        <News />
       </div>
+      <Expertise />
+      <News />
     </div>
   );
 };

@@ -61,14 +61,14 @@ const Fix = () => {
         <img src={IMAGE_PATH.FIX10} className="w-4/5 mx-auto mt-10" />
       </div>
 
-      <div className="bg-stone-200 p-10 mt-20">
+      <div className="bg-stone-100 p-10 mt-20">
         <p className="text-center text-3xl font-bold">
           QUY TRÌNH SỬA CHỮA ĐỒNG HỒ
         </p>
         <div className="w-52 bg-red-500 mx-auto h-[2px] mt-2"></div>
         <div className="grid grid-cols-4 gap-5 mt-10">
           {fixWatchs.map((fixWatch, index) => (
-            <div key={index}>
+            <div key={index} className="bg-stone-200 rounded-lg">
               <img src={fixWatch.image} className="rounded-lg w-full" />
               <p className="mt-2 text-xl font-bold p-5 text-center">
                 {fixWatch.title}
@@ -78,15 +78,15 @@ const Fix = () => {
         </div>
       </div>
 
-      <div className="bg-stone-200 p-10 mt-20">
+      <div className="bg-stone-100 p-10 mt-20">
         <p className="text-center text-3xl font-bold">
           QUY TRÌNH THAY PIN ĐỒNG HỒ
         </p>
         <div className="w-52 bg-red-500 mx-auto h-[2px] mt-2"></div>
         <div className="grid grid-cols-4 gap-5 mt-10">
           {watchBattery.map((watchBattery, index) => (
-            <div key={index} className="rounded-lg w-full">
-              <img src={watchBattery.image} className="rounded-lg" />
+            <div key={index} className="bg-stone-200 rounded-lg">
+              <img src={watchBattery.image} className="rounded-lg w-full" />
               <p className="mt-2 text-xl font-bold p-5 text-center">
                 {watchBattery.title}
               </p>
@@ -127,14 +127,14 @@ const Fix = () => {
         </div>
       </div>
 
-      <div className="mt-5 w-[600px] mx-auto flex justify-center bg-red-600 text-white rounded-full">
+      <div className="mt-5 w-[600px] mx-auto flex justify-between bg-red-600 text-white rounded-full">
         <p className="p-5 text-xl">TƯ VẤN MIỄN PHÍ</p>
         <input
           type="text"
-          className="focus:outline-none border text-black text-xl border-red-400 px-2"
+          className="focus:outline-none border text-black text-xl border-red-400 px-2 flex-1"
           placeholder="Câu hỏi tư vấn..."
         />
-        <button className="p-5 text-xl">Gửi ngay</button>
+        <button className="p-5 text-xl hover:bg-red-700 active:bg-red-600 rounded-r-full">Gửi ngay</button>
       </div>
       <p className="font-bold text-xl text-center my-5">
         Cảm ơn bạn đã quan tâm tới dịch vụ sửa chữa - bảo dưỡng đồng hồ tại

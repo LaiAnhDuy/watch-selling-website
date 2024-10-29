@@ -8,6 +8,8 @@ import Login from "../page/Login";
 import Register from "../page/Register";
 import Fix from "../page/Fix";
 import Order from "../page/Order";
+import ProductDetails from "../page/ProductDetailsPage";
+import AdminPage from "../page/AdminPage";
 
 
 export type RouteType = {
@@ -24,6 +26,8 @@ export type RouteType = {
     { path: ROUTE.REGISTER, title: "Đăng ký", element: Register },
     { path: ROUTE.FIX, title: "Sửa chữa", element: Fix },
     { path: ROUTE.ORDER, title: "Giỏ hàng", element: Order },
+    { path: ROUTE.PRODUCTDETAILS, title: "Chi tiết sản phẩm", element: ProductDetails },
+    { path: ROUTE.ADMIN, title: "Admin", element: AdminPage },
   ];
 
   export default function AppRouter() {
