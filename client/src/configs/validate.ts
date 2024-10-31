@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 export const validationSchemaRegister = Yup.object({
-  name: Yup.string().required("Họ tên là bắt buộc"),
+  fullName: Yup.string().required("Họ tên là bắt buộc"),
 
   email: Yup.string()
     .email("Địa chỉ email không hợp lệ")
@@ -19,7 +19,7 @@ export const validationSchemaRegister = Yup.object({
     .required("Xác nhận mật khẩu là bắt buộc")
     .oneOf([Yup.ref("password")], "Mật khẩu không khớp"),
 
-  phoneNumber: Yup.string()
+  phone: Yup.string()
     .required("Số điện thoại là bắt buộc")
     .matches(/^[0-9]{10}$/, "Số điện thoại phải là 10 chữ số"),
 
