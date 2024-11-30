@@ -1,43 +1,37 @@
-import { useState } from "react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { IconButton, Paper } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import InputBase from "@mui/material/InputBase";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { IMAGE_PATH } from "../../constants/images";
-import { validationSchemaLogin } from "../../configs/validate";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/slices/authSlice";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-
-const users = [
-  { email: "duy@gmail.com", password: "123456aA@" },
-  { email: "test@gmail.com", password: "123456aA@" },
-];
+import { userApi } from "../../api/UserApi";
+import apiCaller from "../../api/apiCaller";
+import { RRError } from "../../types/Api";
+import { Form, Input, message } from "antd";
+import useYupValidation from "../../hooks/useYupValidation";
+import { validationSchemaLogin } from "./Login.validation";
 
 const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginError, setLoginError] = useState<string | null>(null);
-  const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const loginRules = useYupValidation(validationSchemaLogin);
 
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
+  const errorHandler = (error: RRError) => {
+    console.log("Fail: ", error);
   };
 
-  const handleLogin = (values: { email: string; password: string }) => {
-    const user = users.find(
-      (user) => user.email === values.email && user.password === values.password
-    );
-    if (user) {
-      dispatch(login({ email: user.email }));
-      const from = location.state?.from || "/";
-      navigate(from);
-    } else {
-      setLoginError("Email hoặc mật khẩu không đúng");
+  const handleLogin = async (values: { email: string; password: string }) => {
+    const response = await apiCaller({
+      request: userApi.login(values),
+      errorHandler,
+    });
+    if (response) {
+      message.success(response.message);
+      dispatch(
+        login({ email: response.data.email, fullName: response.data.fullName })
+      );
+      navigate("/");
     }
   };
 
@@ -62,82 +56,40 @@ const Login = () => {
           </Link>
         </div>
         <div className="text-white">
-          <Formik
-            initialValues={{
-              email: "",
-              password: "",
-            }}
-            validationSchema={validationSchemaLogin}
-            onSubmit={(values, { setSubmitting }) => {
+          <Form
+            form={form}
+            onFinish={(values) => {
               handleLogin(values);
-              setSubmitting(false);
             }}
           >
-            {({ isSubmitting, isValid }) => (
-              <Form>
-                {/* email */}
-                <Paper component="div" className="flex items-center">
-                  <IconButton type="button">
-                    <MailOutlineIcon />
-                  </IconButton>
-                  <Field
-                    as={InputBase}
-                    name="email"
-                    className="flex-1"
-                    placeholder="Email"
-                  />
-                </Paper>
-                <ErrorMessage
-                  name="email"
-                  component="div"
-                  className="text-red-500 mt-2 ml-5"
-                />
+            {/* email */}
+            <Form.Item
+              name="email"
+              rules={[loginRules]}
+              style={{ marginBottom: "24px" }}
+            >
+              <Input
+                prefix={<MailOutlineIcon className="mr-2" />}
+                placeholder="Email"
+              />
+            </Form.Item>
 
-                {/* password */}
-                <Paper component="div" className="flex items-center mt-5">
-                  <IconButton type="button">
-                    <LockOutlinedIcon />
-                  </IconButton>
-                  <Field
-                    as={InputBase}
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    className="flex-1"
-                    placeholder="Mật khẩu"
-                  />
-                  <IconButton
-                    onClick={handleShowPassword}
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                  >
-                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                  </IconButton>
-                </Paper>
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  className="text-red-500 mt-2 ml-5"
-                />
+            {/* password */}
+            <Form.Item name="password" rules={[loginRules]} className="!pt-2">
+              <Input.Password
+                prefix={<LockOutlinedIcon className="mr-2" />}
+                placeholder="Password"
+              />
+            </Form.Item>
+            <button className="text-blue-500 mt-2">Quên mật khẩu?</button>
 
-                {loginError && (
-                  <div className="text-red-500 mt-5 text-center">
-                    {loginError}
-                  </div>
-                )}
-
-                <p className="text-blue-500 mt-5">Quên mật khẩu?</p>
-
-                <button
-                  type="submit"
-                  className="bg-red-600 text-white mt-5 w-full cursor-pointer p-2 rounded-md active:bg-red-500"
-                  disabled={isSubmitting || !isValid}
-                >
-                  Đăng nhập
-                </button>
-              </Form>
-            )}
-          </Formik>
+            <button
+              type="submit"
+              className="bg-red-500 text-white px-5 py-1 rounded-md w-full mt-5"
+            >
+              Đăng nhập
+            </button>
+          </Form>
 
           <div className="mt-5 text-center">
             Chưa có tài khoản?{" "}

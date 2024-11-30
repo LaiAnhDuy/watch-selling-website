@@ -8,6 +8,8 @@ export const authAPi = {
     return axiosClient.post(ENDPOINTS.SIGN_IN, data);
   },
   register: (data: any) => (): Promise<AxiosResponse<any, any>> => {
-    return axiosClient.post(ENDPOINTS.SIGN_UP, data);
+    return axiosClient.post(ENDPOINTS.SIGN_UP, data, {
+      withCredentials: true,
+    });
   },
 };

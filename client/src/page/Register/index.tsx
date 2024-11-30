@@ -1,54 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Formik, Form, ErrorMessage, Field } from "formik";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { IconButton, Paper } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import InputBase from "@mui/material/InputBase";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { IMAGE_PATH } from "../../constants/images";
-import { validationSchemaRegister } from "../../configs/validate";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import { RRError } from "../../types/Api";
-import { message } from "antd";
+import { Form, Input, message } from "antd";
 import apiCaller from "../../api/apiCaller";
-import { authAPi } from "../../api/authApi";
+import { userApi } from "../../api/UserApi";
+import useYupValidation from "../../hooks/useYupValidation";
+import { validationSchemaRegister } from "./Register.validation";
 
 const Register = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [click, setClick] = useState(true);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const registerRules = useYupValidation(validationSchemaRegister);
 
   const errorHandler = (error: RRError) => {
     console.log("Fail: ", error);
   };
 
   const handleRegister = async (data: any) => {
-    console.log(1)
     const response = await apiCaller({
-      request: authAPi.register(data),
+      request: userApi.register(data),
       errorHandler,
     });
-    console.log(response)
+    console.log(response);
     if (response) {
-      navigate('/')
-      message.success(
-        "Register Successfully! Please check your email to activate your account"
-      );
+      navigate("/login");
+      message.success(response.message);
     }
-  };
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleShowConfirmPassword = () => {
-    setShowConfirmPassword(!showConfirmPassword);
   };
 
   return (
@@ -72,186 +55,77 @@ const Register = () => {
           </Link>
         </div>
         <div className="text-white">
-          <Formik
-            initialValues={{
-              fullName: "",
-              email: "",
-              password: "",
-              confirmPassword: "",
-              phone: "",
-              address: "",
-            }}
-            validationSchema={validationSchemaRegister}
-            onSubmit={(values, { setSubmitting }) => {
-              handleRegister(values)
-              setSubmitting(false);
+          <Form
+            form={form}
+            onFinish={(values) => {
+              handleRegister(values);
             }}
           >
-            {({ isSubmitting, isValid }) => (
-              <Form>
-                {/* name */}
-                <Paper component="div" className="flex items-center">
-                  <IconButton type="button">
-                    <PersonOutlineOutlinedIcon />
-                  </IconButton>
-                  <Field
-                    as={InputBase}
-                    name="fullName"
-                    className="flex-1"
-                    placeholder="Họ tên"
-                  />
-                </Paper>
-                <ErrorMessage
-                  name="fullName"
-                  component="div"
-                  className="text-red-500 mt-2 ml-5"
-                />
+            {/* name */}
+            <Form.Item name="fullName" rules={[]}>
+              <Input
+                prefix={<PersonOutlineOutlinedIcon className="mr-2" />}
+                placeholder="Họ tên"
+              />
+            </Form.Item>
 
-                {/* email */}
-                <Paper component="div" className="flex items-center mt-5">
-                  <IconButton type="button">
-                    <MailOutlineIcon />
-                  </IconButton>
-                  <Field
-                    as={InputBase}
-                    name="email"
-                    className="flex-1"
-                    placeholder="Email"
-                  />
-                </Paper>
-                <ErrorMessage
-                  name="email"
-                  component="div"
-                  className="text-red-500 mt-2 ml-5"
-                />
+            {/* email */}
+            <Form.Item name="email" rules={[registerRules]} className="!pt-2">
+              <Input
+                prefix={<MailOutlineIcon className="mr-2" />}
+                placeholder="Email"
+              />
+            </Form.Item>
 
-                {/* password */}
-                <Paper component="div" className="flex items-center mt-5">
-                  <IconButton type="button">
-                    <LockOutlinedIcon />
-                  </IconButton>
-                  <Field
-                    as={InputBase}
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    className="flex-1"
-                    placeholder="Mật khẩu"
-                  />
-                  <IconButton
-                    onClick={handleShowPassword}
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                  >
-                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                  </IconButton>
-                </Paper>
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  className="text-red-500 mt-2 ml-5"
-                />
+            {/* password */}
+            <Form.Item
+              name="password"
+              rules={[registerRules]}
+              className="!pt-2"
+            >
+              <Input.Password
+                prefix={<LockOutlinedIcon className="mr-2" />}
+                placeholder="Mật khẩu"
+              />
+            </Form.Item>
 
-                {/* confirm password */}
-                <Paper component="div" className="flex items-center mt-5">
-                  <IconButton type="button">
-                    <LockOutlinedIcon />
-                  </IconButton>
-                  <Field
-                    as={InputBase}
-                    name="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    className="flex-1"
-                    placeholder="Xác nhận mật khẩu"
-                  />
-                  <IconButton
-                    onClick={handleShowConfirmPassword}
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                  >
-                    {showConfirmPassword ? (
-                      <VisibilityOffIcon />
-                    ) : (
-                      <VisibilityIcon />
-                    )}
-                  </IconButton>
-                </Paper>
-                <ErrorMessage
-                  name="confirmPassword"
-                  component="div"
-                  className="text-red-500 mt-2 ml-5"
-                />
+            {/* comfirm password */}
+            <Form.Item
+              name="confirmPassword"
+              rules={[registerRules]}
+              className="!pt-2"
+            >
+              <Input.Password
+                prefix={<PersonOutlineOutlinedIcon className="mr-2" />}
+                placeholder="Xác nhận mật khẩu"
+              />
+            </Form.Item>
 
-                {/* phone */}
-                <Paper component="div" className="flex items-center mt-5">
-                  <IconButton type="button">
-                    <LocalPhoneOutlinedIcon />
-                  </IconButton>
-                  <Field
-                    as={InputBase}
-                    name="phone"
-                    className="flex-1"
-                    placeholder="Số điện thoại"
-                  />
-                </Paper>
-                <ErrorMessage
-                  name="phone"
-                  component="div"
-                  className="text-red-500 mt-2 ml-5"
-                />
+            {/* phone */}
+            <Form.Item name="phone" rules={[registerRules]} className="!pt-2">
+              <Input
+                prefix={<LocalPhoneOutlinedIcon className="mr-2" />}
+                placeholder="Số điện thoại"
+              />
+            </Form.Item>
 
-                {/* address */}
-                <Paper component="div" className="flex items-center mt-5">
-                  <IconButton type="button">
-                    <PlaceOutlinedIcon />
-                  </IconButton>
-                  <Field
-                    as={InputBase}
-                    name="address"
-                    className="flex-1"
-                    placeholder="Địa chỉ"
-                  />
-                </Paper>
-                <ErrorMessage
-                  name="address"
-                  component="div"
-                  className="text-red-500 mt-2 ml-5"
-                />
+            {/* address */}
+            <Form.Item name="address" rules={[registerRules]} className="!pt-2">
+              <Input
+                prefix={<PlaceOutlinedIcon className="mr-2" />}
+                placeholder="Địa chỉ"
+              />
+            </Form.Item>
 
-                <div className="flex gap-x-5 mt-5 items-center">
-                  {click ? (
-                    <img
-                      src={IMAGE_PATH.CHECK}
-                      className="w-6 h-6"
-                      onClick={() => setClick(false)}
-                    />
-                  ) : (
-                    <div
-                      className="w-9 h-6 bg-white rounded-full"
-                      onClick={() => setClick(true)}
-                    ></div>
-                  )}
-                  <p className="text-xs">
-                    Bằng việc Đăng ký, bạn đã đọc và đồng ý với{" "}
-                    <span className="text-blue-400">Điều khoản sử dụng </span>
-                    và <span className="text-blue-400">
-                      Chính sách bảo mật
-                    </span>{" "}
-                    của DWATCH
-                  </p>
-                </div>
+            <button className="text-blue-500 mt-2">Quên mật khẩu?</button>
 
-                <button
-                  type="submit"
-                  className="bg-red-600 text-white mt-5 w-full cursor-pointer p-2 rounded-md active:bg-red-500"
-                  disabled={isSubmitting || !isValid}
-                >
-                  Đăng ký
-                </button>
-              </Form>
-            )}
-          </Formik>
+            <button
+              type="submit"
+              className="bg-red-500 text-white px-5 py-1 rounded-md w-full mt-5"
+            >
+              Đăng ký
+            </button>
+          </Form>
 
           <div className="mt-5 text-center">
             Đã có tài khoản?{" "}
