@@ -14,7 +14,7 @@ export const productApi = {
 
   createProduct: (
     data: FormData,
-    accessToken: string
+    accessToken: string | undefined
   ): (() => Promise<AxiosResponse<any, any>>) => {
     return (): Promise<AxiosResponse<any, any>> => {
       return axiosClient.post(ENDPOINTS.PRODUCTS.BASE, data, {

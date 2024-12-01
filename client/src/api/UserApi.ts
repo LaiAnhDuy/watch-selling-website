@@ -17,14 +17,9 @@ export const userApi = {
   },
 
   getDetailsUser: (
-    accessToken: string
   ): (() => Promise<AxiosResponse<any, any>>) => {
     return (): Promise<AxiosResponse<any, any>> => {
-      return axiosClient.get("/user/", {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
+      return axiosClient.get("/user/",);
     };
   },
 
@@ -43,41 +38,26 @@ export const userApi = {
   },
 
   getAllUser: (
-    accessToken: string
   ): (() => Promise<AxiosResponse<any, any>>) => {
     return (): Promise<AxiosResponse<any, any>> => {
-      return axiosClient.get("/user/list", {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
+      return axiosClient.get("/user/list",);
     };
   },
 
   updateUser: (
     id: string,
     data: any,
-    accessToken: string
   ): (() => Promise<AxiosResponse<any, any>>) => {
     return (): Promise<AxiosResponse<any, any>> => {
-      return axiosClient.patch(`/user/${id}`, data, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
+      return axiosClient.patch(`/user/${id}`, data);
     };
   },
 
   deleteUser: (
     id: string,
-    accessToken: string
   ): (() => Promise<AxiosResponse<any, any>>) => {
     return (): Promise<AxiosResponse<any, any>> => {
-      return axiosClient.delete(`/user/${id}`, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
+      return axiosClient.delete(`/user/${id}`);
     };
   },
 
@@ -91,14 +71,9 @@ export const userApi = {
 
   changePassword: (
     data: { oldPassword: string; newPassword: string },
-    accessToken: string
   ): (() => Promise<AxiosResponse<any, any>>) => {
     return (): Promise<AxiosResponse<any, any>> => {
-      return axiosClient.post("/user/change-password", data, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
+      return axiosClient.post("/user/change-password", data);
     };
   },
 };

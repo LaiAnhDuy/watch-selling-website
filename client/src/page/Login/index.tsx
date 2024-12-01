@@ -22,17 +22,19 @@ const Login = () => {
   };
 
   const handleLogin = async (values: { email: string; password: string }) => {
-    const response = await apiCaller({
-      request: userApi.login(values),
-      errorHandler,
-    });
-    if (response) {
-      message.success(response.message);
-      dispatch(
-        login({ email: response.data.email, fullName: response.data.fullName })
-      );
-      navigate("/");
-    }
+      const response = await apiCaller({
+        request: userApi.login(values),
+        errorHandler,
+      });
+      if (response) {
+        message.success(response.message);
+        localStorage.setItem('access_token', response.access_token);
+        dispatch(
+          login({ email: response.data.email, fullName: response.data.fullName })
+        );
+        navigate("/");
+      }
+    
   };
 
   return (
